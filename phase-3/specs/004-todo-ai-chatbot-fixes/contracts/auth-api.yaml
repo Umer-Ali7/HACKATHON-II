@@ -1,0 +1,122 @@
+openapi: 3.1.0
+info:
+  title: Todo AI Chatbot - Auth API
+  version: 1.0.0
+  description: Authentication endpoints added by fix 004
+
+paths:
+  /api/auth/signup:
+    post:
+      summary: Register a new user
+      operationId: signup
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: Email already registered
+        '422':
+          description: Validation error (invalid email, short password)
+
+  /api/auth/login:
+    post:
+      summary: Authenticate an existing user
+      operationId: login
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: Invalid email or password
+
+components:
+  schemas:
+    SignupRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          minLength: 6
+          example: mypassword123
+        name:
+          type: string
+          maxLength: 100
+          nullable: true
+          example: John Doe
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          example: mypassword123
+
+    AuthResponse:
+      type: object
+      required: [user_id, email, token]
+      properties:
+        user_id:
+          type: string
+          description: Server-assigned user identifier
+          example: john-doe
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        name:
+          type: string
+          nullable: true
+          example: John Doe
+        token:
+          type: string
+          description: Temporary auth token (placeholder for Better Auth migration)
+          example: temp_token_john-doe
+
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: Invalid email or password
