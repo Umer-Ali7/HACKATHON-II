@@ -2,10 +2,10 @@
 
 import json
 import logging
+import os
 import time
 
-from agents import Agent, Runner, function_tool, set_tracing_disabled
-from agents.models.openai_chatcompletions import OpenAIChatCompletionsModel
+from agents import Agent, OpenAIChatCompletionsModel, Runner, function_tool, set_tracing_disabled
 from openai import AsyncOpenAI
 
 from app.core.config import settings
@@ -15,6 +15,12 @@ logger = logging.getLogger(__name__)
 
 # Disable tracing since we're not using OpenAI's API directly
 set_tracing_disabled(True)
+
+# Initialize Groq client
+groq_client = AsyncOpenAI(
+    api_key=settings.GROQ_API_KEY,
+    base_url="https://api.groq.com/openai/v1",
+)
 
 AGENT_INSTRUCTIONS = """You are a helpful todo list assistant. Your job is to help users manage their tasks through natural language.
 
@@ -153,26 +159,20 @@ async def update_task_tool(task_id: int, new_title: str = "", new_description: s
     return json.dumps(result)
 
 
-# --- Groq-backed model via OpenAI Agents SDK ---
-
-def _create_groq_model() -> OpenAIChatCompletionsModel:
-    """Create an OpenAI Agents SDK model backed by Groq."""
-    groq_client = AsyncOpenAI(
-        api_key=settings.GROQ_API_KEY,
-        base_url="https://api.groq.com/openai/v1",
-    )
-    return OpenAIChatCompletionsModel(
-        model=MODEL,
-        openai_client=groq_client,
-    )
-
+# --- Groq model integration ---
 
 def _create_agent() -> Agent:
     """Create the todo agent with Groq model and tool functions."""
+    # Use OpenAI Agents SDK with Groq provider
+    model = OpenAIChatCompletionsModel(
+        openai_client=groq_client,
+        model=MODEL,
+    )
+
     return Agent(
         name="Todo Assistant",
         instructions=AGENT_INSTRUCTIONS,
-        model=_create_groq_model(),
+        model=model,
         tools=[add_task_tool, list_tasks_tool, complete_task_tool, delete_task_tool, update_task_tool],
     )
 
