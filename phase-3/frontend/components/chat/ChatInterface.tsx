@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { sendMessage, type ChatResponse, type ToolCallRecord } from "@/lib/api";
+import { useChatStore, type ChatMessage } from "@/lib/store";
 
 interface Message {
   id: string;
@@ -21,7 +22,8 @@ export default function ChatInterface({
   conversationId,
   onConversationCreated,
 }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  // Use Zustand store for persistent messages
+  const { messages, addMessage, setMessages } = useChatStore();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,12 +49,12 @@ export default function ChatInterface({
     setError(null);
     setInput("");
 
-    const userMsg: Message = {
+    const userMsg: ChatMessage = {
       id: crypto.randomUUID(),
       role: "user",
       content: trimmed,
     };
-    setMessages((prev) => [...prev, userMsg]);
+    addMessage(userMsg);
     setIsLoading(true);
 
     try {
@@ -66,13 +68,13 @@ export default function ChatInterface({
         onConversationCreated(res.conversation_id);
       }
 
-      const assistantMsg: Message = {
+      const assistantMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: "assistant",
         content: res.response,
         toolCalls: res.tool_calls,
       };
-      setMessages((prev) => [...prev, assistantMsg]);
+      addMessage(assistantMsg);
     } catch (err) {
       const detail = err instanceof Error ? err.message : "Something went wrong.";
       setError(detail);

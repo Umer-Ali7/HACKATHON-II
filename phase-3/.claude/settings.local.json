@@ -6,7 +6,14 @@
       "Bash(del \"C:\\\\Users\\\\Administrator\\\\Desktop\\\\HACKATHON-II\\\\phase-3\\\\frontend\\\\app\\\\chat\\\\page.tsx\")",
       "WebFetch(domain:openai.github.io)",
       "mcp__vercel__list_teams",
-      "mcp__vercel__get_project"
+      "mcp__vercel__get_project",
+      "mcp__vercel__get_runtime_logs",
+      "Bash(vercel env add:*)",
+      "Bash(vercel env rm:*)",
+      "Bash(curl:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }

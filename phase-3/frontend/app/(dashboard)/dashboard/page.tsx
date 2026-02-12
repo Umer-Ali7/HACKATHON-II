@@ -116,11 +116,24 @@ export default function DashboardPage() {
                   <BarChart data={stats?.activity ?? []}>
                     <XAxis
                       dataKey="date"
-                      tick={{ fontSize: 12 }}
+                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
                       tickFormatter={(v: string) => v.slice(5)}
+                      stroke="hsl(var(--border))"
                     />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-                    <Tooltip />
+                    <YAxis
+                      allowDecimals={false}
+                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                      stroke="hsl(var(--border))"
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "hsl(var(--popover))",
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: "6px",
+                        color: "hsl(var(--popover-foreground))",
+                      }}
+                      labelStyle={{ color: "hsl(var(--popover-foreground))" }}
+                    />
                     <Bar
                       dataKey="count"
                       fill="hsl(var(--chart-1))"

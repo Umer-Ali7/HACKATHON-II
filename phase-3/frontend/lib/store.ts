@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface UserPreferences {
   sidebarCollapsed: boolean;
@@ -10,6 +11,46 @@ export const usePreferences = create<UserPreferences>((set) => ({
   toggleSidebar: () =>
     set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
 }));
+
+// Chat message type
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  toolCalls?: Array<{
+    tool: string;
+    parameters: Record<string, unknown>;
+    result: Record<string, unknown>;
+  }>;
+}
+
+// Chat state interface
+interface ChatState {
+  conversationId: number | null;
+  messages: ChatMessage[];
+  setConversationId: (id: number | null) => void;
+  addMessage: (message: ChatMessage) => void;
+  setMessages: (messages: ChatMessage[]) => void;
+  clearChat: () => void;
+}
+
+// Chat store with localStorage persistence
+export const useChatStore = create<ChatState>()(
+  persist(
+    (set) => ({
+      conversationId: null,
+      messages: [],
+      setConversationId: (id) => set({ conversationId: id }),
+      addMessage: (message) =>
+        set((state) => ({ messages: [...state.messages, message] })),
+      setMessages: (messages) => set({ messages }),
+      clearChat: () => set({ conversationId: null, messages: [] }),
+    }),
+    {
+      name: "chat-storage", // localStorage key
+    }
+  )
+);
 
 interface AuthState {
   userId: string | null;

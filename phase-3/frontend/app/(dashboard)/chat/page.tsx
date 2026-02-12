@@ -1,17 +1,21 @@
 "use client";
 
-import { useState } from "react";
 import { Plus } from "lucide-react";
 import ChatInterface from "@/components/chat/ChatInterface";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import PageTransition from "@/components/layout/PageTransition";
+import { useChatStore } from "@/lib/store";
 
 export default function ChatPage() {
   const { userId } = useAuth();
-  const [conversationId, setConversationId] = useState<number | null>(null);
+  const { conversationId, setConversationId, clearChat } = useChatStore();
 
   if (!userId) return null;
+
+  const handleNewChat = () => {
+    clearChat();
+  };
 
   return (
     <PageTransition>
@@ -23,7 +27,7 @@ export default function ChatPage() {
             variant="outline"
             size="sm"
             className="gap-2"
-            onClick={() => setConversationId(null)}
+            onClick={handleNewChat}
           >
             <Plus className="h-4 w-4" />
             New Chat
