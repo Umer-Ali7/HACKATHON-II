@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 interface UserPreferences {
   sidebarCollapsed: boolean;
@@ -48,6 +48,7 @@ export const useChatStore = create<ChatState>()(
     }),
     {
       name: "chat-storage", // localStorage key
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
