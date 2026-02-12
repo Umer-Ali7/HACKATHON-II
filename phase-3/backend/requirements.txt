@@ -7,6 +7,8 @@ pydantic>=2.12.5
 pydantic-settings>=2.7.0
 passlib[bcrypt]>=1.7.4
 bcrypt<5
+transformers>=4.40.0
+torch>=2.1.0
 python-dotenv>=1.0.0
 python-multipart>=0.0.22
 requests>=2.32.5
