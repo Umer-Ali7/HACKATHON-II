@@ -99,7 +99,7 @@ export default function ChatInterface({
   const handleRetry = () => {
     const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
     if (lastUserMsg) {
-      setMessages((prev) => prev.filter((m) => m.id !== lastUserMsg.id));
+      setMessages(messages.filter((m) => m.id !== lastUserMsg.id));
       setInput(lastUserMsg.content);
       setError(null);
     }
