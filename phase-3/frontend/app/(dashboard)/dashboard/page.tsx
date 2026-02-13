@@ -116,27 +116,29 @@ export default function DashboardPage() {
                   <BarChart data={stats?.activity ?? []}>
                     <XAxis
                       dataKey="date"
-                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                      tick={{ fontSize: 12, fill: "currentColor" }}
                       tickFormatter={(v: string) => v.slice(5)}
-                      stroke="hsl(var(--border))"
+                      stroke="currentColor"
+                      className="text-foreground"
                     />
                     <YAxis
                       allowDecimals={false}
-                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-                      stroke="hsl(var(--border))"
+                      tick={{ fontSize: 12, fill: "currentColor" }}
+                      stroke="currentColor"
+                      className="text-foreground"
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "hsl(var(--popover))",
+                        backgroundColor: "hsl(var(--background))",
                         border: "1px solid hsl(var(--border))",
                         borderRadius: "6px",
-                        color: "hsl(var(--popover-foreground))",
+                        color: "hsl(var(--foreground))",
                       }}
-                      labelStyle={{ color: "hsl(var(--popover-foreground))" }}
+                      labelStyle={{ color: "hsl(var(--foreground))" }}
                     />
                     <Bar
                       dataKey="count"
-                      fill="hsl(var(--chart-1))"
+                      fill="hsl(var(--primary))"
                       radius={[4, 4, 0, 0]}
                     />
                   </BarChart>
